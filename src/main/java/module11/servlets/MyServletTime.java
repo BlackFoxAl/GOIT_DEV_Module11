@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
 import java.io.IOException;
@@ -28,11 +29,11 @@ public class MyServletTime extends HttpServlet {
         engine = new TemplateEngine();
 
         FileTemplateResolver resolver = new FileTemplateResolver();
-        resolver.setPrefix("webapps/servletThymeleaf-2.0/WEB-INF/templates/");
+        resolver.setPrefix("/WEB-INF/templates/");
         resolver.setSuffix(".html");
-        resolver.setTemplateMode("HTML5");
-        resolver.setOrder(engine.getTemplateResolvers().size());
-        resolver.setCacheable(false);
+        resolver.setTemplateMode(TemplateMode.HTML);
+        //resolver.setOrder(engine.getTemplateResolvers().size());
+        //resolver.setCacheable(false);
         engine.addTemplateResolver(resolver);
     }
 
@@ -68,10 +69,14 @@ public class MyServletTime extends HttpServlet {
     }
 
     private String getLastTimezoneFromCookie(HttpServletRequest request) {
-         return Arrays.stream(request.getCookies())
-                .filter(cookie -> "lastTimezone".equals(cookie.getName()))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElse(DEFAULT_TIME_ZONE);
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("lastTimezone".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return DEFAULT_TIME_ZONE;
     }
 }
