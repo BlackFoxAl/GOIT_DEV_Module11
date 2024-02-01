@@ -32,8 +32,9 @@ public class MyServletTime extends HttpServlet {
         resolver.setPrefix("/WEB-INF/templates/");
         resolver.setSuffix(".html");
         resolver.setTemplateMode(TemplateMode.HTML);
-        //resolver.setOrder(engine.getTemplateResolvers().size());
-        //resolver.setCacheable(false);
+        resolver.setCharacterEncoding("UTF-8");
+        resolver.setOrder(engine.getTemplateResolvers().size());
+        resolver.setCacheable(false);
         engine.addTemplateResolver(resolver);
     }
 
